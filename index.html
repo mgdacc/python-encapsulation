@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Interactiva: Encapsulación en Python</title>
+    <style>
+        /* === ESTILOS GLOBALES Y DE ESCRITORIO === */
+        body {
+            font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0;
+            padding: 40px; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; box-sizing: border-box; transition: padding 0.3s ease;
+        }
+
+        .slideshow-container { position: relative; width: 90%; max-width: 960px; }
+        
+        .slide {
+            display: none; background-color: #fff; border: 1px solid #ccc;
+            height: 540px; padding: 40px 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column; justify-content: center; position: relative;
+            box-sizing: border-box;
+        }
+
+        .fade { animation-name: fade; animation-duration: 0.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; background-color: #cccccc; color: #333;
+            border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 24px; transition: all 0.3s ease;
+            user-select: none; z-index: 10;
+        }
+
+        .prev { left: -70px; }
+        .next { right: -70px; }
+        .prev:hover, .next:hover { background-color: #aaaaaa; }
+
+        .slide h1 { font-size: 3.5em; text-align: center; border-bottom: 4px solid #11a800; padding-bottom: 20px; color: #005A9C; }
+        .slide h2 { font-size: 2.8em; margin-top: 0; margin-bottom: 30px; text-align: center; color: #005A9C; }
+        .single-content { text-align: center; }
+        .single-content p { font-size: 1.5em; color: #444; }
+        .single-content pre { font-size: 1.2em; display: inline-block; text-align: left; max-width: 100%; }
+        pre { background-color: #2d3636; color: #fff; padding: 15px; border-radius: 5px; font-size: 1.1em; white-space: pre-wrap; }
+        .footer { position: absolute; bottom: 20px; right: 40px; font-size: 1em; color: #888; }
+
+        /* === MEDIA QUERIES === */
+        @media screen and (max-width: 768px) {
+            body { padding: 15px; }
+            .slideshow-container { width: 100%; padding-bottom: 75px; }
+            .slide { height: auto; min-height: 75vh; padding: 20px 25px; }
+            .prev, .next { top: auto; bottom: 15px; width: 45px; height: 45px; }
+            .prev { left: 50%; transform: translateX(-110%); }
+            .next { left: 50%; transform: translateX(10%); right: auto; }
+            .slide h1 { font-size: 2.2em; }
+            .slide h2 { font-size: 1.8em; }
+            .single-content p { font-size: 1.1em; }
+            .single-content pre { font-size: 1em; }
+            .footer { font-size: 0.8em; right: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slideshow-container">
+        
+        <div class="slide fade">
+            <h1>Cheat Sheet de Python</h1>
+            <h2 style="color:#333; border:none;">Encapsulación</h2>
+            <div class="footer">1 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>¿Qué es la Encapsulación?</h2>
+            <div class="single-content"><p>La idea de agrupar datos (atributos) y métodos que operan sobre esos datos en una sola unidad (una clase), y restringir el acceso directo a algunos de sus componentes.</p></div>
+            <div class="footer">2 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>El Objetivo Principal</h2>
+            <div class="single-content"><p>Proteger la integridad de los datos del objeto. Se busca evitar que los datos se modifiquen de forma inesperada o inválida.</p></div>
+            <div class="footer">3 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>Atributos Públicos</h2>
+            <div class="single-content"><p>Por defecto, todos los atributos y métodos en Python son públicos. Se puede acceder a ellos y modificarlos desde fuera de la clase.</p><pre><code>class Cuenta:
+    def __init__(self, saldo):
+        self.saldo = saldo
+
+mi_cuenta = Cuenta(1000)
+mi_cuenta.saldo = -500 # ¡Esto es posible, pero es incorrecto!</code></pre></div>
+            <div class="footer">4 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>"Privado" por Convención: <code>_</code></h2>
+            <div class="single-content"><p>Un guion bajo al principio de un nombre (`_saldo`) es una convención. Le dice a otros programadores: "Esto es para uso interno, por favor no lo toques".</p></div>
+            <div class="footer">5 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>Ejemplo con <code>_</code></h2>
+            <div class="single-content"><p>Python no impide el acceso, pero es una señal de advertencia para el programador.</p><pre><code>class Cuenta:
+    def __init__(self, saldo):
+        self._saldo = saldo # Atributo "privado"
+
+mi_cuenta = Cuenta(1000)
+# Todavía es posible, pero se considera una mala práctica
+mi_cuenta._saldo = -500</code></pre></div>
+            <div class="footer">6 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>"Fuertemente Privado": <code>__</code></h2>
+            <div class="single-content"><p>Dos guiones bajos (`__saldo`) activan un mecanismo llamado "Name Mangling". Python cambia el nombre internamente para evitar el acceso accidental.</p></div>
+            <div class="footer">7 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Ejemplo con <code>__</code></h2>
+            <div class="single-content"><p>Intentar acceder directamente al atributo ahora da un error.</p><pre><code>class Cuenta:
+    def __init__(self, saldo):
+        self.__saldo = saldo
+
+mi_cuenta = Cuenta(1000)
+# Esto dará un AttributeError:
+# mi_cuenta.__saldo = -500</code></pre></div>
+            <div class="footer">8 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>Getters y Setters</h2>
+            <div class="single-content"><p>La forma de controlar el acceso es a través de métodos. "Getters" para obtener un valor y "Setters" para modificarlo (con validación).</p><pre><code>class Cuenta:
+    def __init__(self, saldo):
+        self._saldo = saldo
+    
+    def get_saldo(self):
+        return self._saldo
+        
+    def set_saldo(self, cantidad):
+        if cantidad >= 0:
+            self._saldo = cantidad</code></pre></div>
+            <div class="footer">9 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>El Estilo "Pythónico": <code>@property</code></h2>
+            <div class="single-content"><p>Los decoradores `@property` y `@nombre.setter` nos permiten usar getters y setters, pero con la sintaxis simple de acceso a un atributo.</p></div>
+            <div class="footer">10 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2><code>@property</code> (Getter)</h2>
+            <div class="single-content"><p>Convierte un método en un atributo de solo lectura.</p><pre><code>class Persona:
+    def __init__(self, nombre, apellido):
+        self.nombre = nombre
+        self.apellido = apellido
+    
+    @property
+    def nombre_completo(self):
+        return f"{self.nombre} {self.apellido}"
+
+p = Persona("Juan", "Perez")
+print(p.nombre_completo) # Se accede como un atributo</code></pre></div>
+            <div class="footer">11 / 14</div>
+        </div>
+
+        <div class="slide fade">
+            <h2><code>@*.setter</code> (Setter)</h2>
+            <div class="single-content"><p>Crea un método que se llama cuando se intenta asignar un valor al atributo.</p><pre><code>class Cuenta:
+    def __init__(self, saldo_inicial):
+        self._saldo = saldo_inicial
+    
+    @property
+    def saldo(self):
+        return self._saldo
+        
+    @saldo.setter
+    def saldo(self, cantidad):
+        if cantidad < 0:
+            raise ValueError("El saldo no puede ser negativo.")
+        self._saldo = cantidad</code></pre></div>
+            <div class="footer">12 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Uso de Propiedades</h2>
+            <div class="single-content"><p>La sintaxis es limpia y natural, pero la lógica de validación se ejecuta por detrás.</p><pre><code>mi_cuenta = Cuenta(1000)
+
+print(mi_cuenta.saldo) # Llama al getter (@property)
+
+mi_cuenta.saldo = 500  # Llama al setter (@saldo.setter)
+
+# Esto ahora lanzará un ValueError:
+# mi_cuenta.saldo = -50</code></pre></div>
+            <div class="footer">13 / 14</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Conclusión</h2>
+            <div class="single-content"><p>La encapsulación en Python se basa en convenciones (`_`) y se implementa de forma elegante con propiedades (`@property`) para proteger la integridad de los datos de un objeto.</p></div>
+            <div class="footer">14 / 14</div>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            if (n > slides.length) { slideIndex = 1 } 
+            if (n < 1) { slideIndex = slides.length }
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            slides[slideIndex - 1].style.display = "flex";
+        }
+    </script>
+
+</body>
+</html>
